@@ -9,6 +9,10 @@ verify_ssl = true
 flask = "*"
 peewee = "*"
 flask-wtf = "*"
+wtf-peewee = "*"
+jinja2 = "*"
+flask-security = "*"
+flask-peewee = "*"
 
 [requires]
 python_version = "3.7"
