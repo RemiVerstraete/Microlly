@@ -20,8 +20,7 @@ app.config['SECURITY_PASSWORD_SALT'] = app.config['SECRET_KEY']
 
 user_datastore = PeeweeUserDatastore(database, User, '', '')
 
-security = Security(app, user_datastore,
-         register_form=ExtendedRegisterForm)
+security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
 
 @app.cli.command()
 def initdb():
@@ -39,8 +38,3 @@ def dropdb():
 @login_required
 def blog():
     return render_template('blog.html')
-
-'''@security.register_context_processor
-def security_register_processor():
-    form = ExtendedRegisterForm()
-    return dict(form=form)'''
