@@ -1,4 +1,16 @@
 {% extends 'base.html' %}
 {% block main %}
-Login
+<form method="POST">
+    {% for field in login_user_form %}
+        {% if field.widget.input_type != 'hidden' %}
+            {{ field.label() }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                <div class="alert alert-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+        {{ field() }}
+    {% endfor %}
+</form>
 {% endblock main %}
