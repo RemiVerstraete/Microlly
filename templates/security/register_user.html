@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block main %}
+<form method="POST">
+    {% for field in register_user_form %}
+        {% if field.widget.input_type != 'hidden' %}
+            {{ field.label() }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                <div class="alert alert-error">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+        {{ field() }}
+    {% endfor %}
+    <button type="submit">S'enregistrer</button>
+</form>
+{% endblock main %}

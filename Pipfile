@@ -13,6 +13,7 @@ wtf-peewee = "*"
 jinja2 = "*"
 flask-security = "*"
 flask-peewee = "*"
+bcrypt = "*"
 
 [requires]
 python_version = "3.7"

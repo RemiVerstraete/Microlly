@@ -4,6 +4,7 @@ from peewee import *
 from flask_security import Security, PeeweeUserDatastore, login_required
 from model import User, Publication, create_tables, drop_tables, database
 from form import ExtendedRegisterForm
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config['DEBUG']=True
@@ -13,6 +14,9 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_REGISTER_URL'] = '/register'
+app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
+
+app.config['SECURITY_PASSWORD_SALT'] = app.config['SECRET_KEY']
 
 user_datastore = PeeweeUserDatastore(database, User, '', '')
 
@@ -36,6 +40,7 @@ def dropdb():
 def blog():
     return render_template('blog.html')
 
-'''@app.route('/register')
-def register():
-    return render_template('security/register_user.html')'''
+'''@security.register_context_processor
+def security_register_processor():
+    form = ExtendedRegisterForm()
+    return dict(form=form)'''
