@@ -1,5 +1,5 @@
 import os, click
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, request, flash, redirect, abort
 from peewee import *
 from flask_security import Security, PeeweeUserDatastore, login_required
 from model import User, Publication, create_tables, drop_tables, database
@@ -37,4 +37,24 @@ def dropdb():
 @app.route('/')
 @login_required
 def blog():
-    return render_template('blog.html')
+    publications = Publication.select()
+    return render_template('blog.html', publications=publications)
+
+@app.route('/<int: post_id>', methods=['GET','POST'])
+@login_required
+def edit_post(post_id):
+    try:
+        publication = Publication.get(post_id)
+    except Publication.DoesNotExist:
+        abort(404)
+
+    if request.method == 'POST':
+        form = SimpleDinosaurForm(request.form, obj=publication)
+        if form.validate():
+            form.populate_obj(publication)
+            publication.save()
+            flash('Your entry has been saved')
+    else:
+        form = SimpleDinosaurForm(obj=publication)
+
+    return render_template('dinosaurs/form.html', form=form, publication=publication)
