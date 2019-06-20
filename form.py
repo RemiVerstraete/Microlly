@@ -7,3 +7,4 @@ class ExtendedRegisterForm(RegisterForm):
     first_name = StringField('First Name', [DataRequired()])
     last_name = StringField('Last Name', [DataRequired()])
     username = StringField('Username', [DataRequired()])
+

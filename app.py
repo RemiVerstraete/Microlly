@@ -41,8 +41,8 @@ def dropdb():
 def blog():
     publications = Publication.select()
     return render_template('blog.html', publications=publications)
-'''
-@app.route('/<int: post_id>', methods=['GET','POST'])
+
+@app.route('/edit/<int: post_id>', methods=['GET','POST'])
 @login_required
 def edit_post(post_id):
     try:
@@ -60,4 +60,3 @@ def edit_post(post_id):
         form = SimpleDinosaurForm(obj=publication)
 
     return render_template('dinosaurs/form.html', form=form, publication=publication)
-'''
