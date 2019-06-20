@@ -3,7 +3,7 @@ from flask import Flask, render_template, url_for, request, flash, redirect, abo
 from peewee import *
 from flask_security import Security, PeeweeUserDatastore, login_required
 from model import User, Publication, create_tables, drop_tables, database
-from form import ExtendedRegisterForm
+from form import ExtendedRegisterForm, SimplePublicationForm, PublicationForm
 from flask_mail import Mail
 
 app = Flask(__name__)
@@ -51,12 +51,12 @@ def edit_post(post_id):
         abort(404)
 
     if request.method == 'POST':
-        form = SimpleDinosaurForm(request.form, obj=publication)
+        form = PublicationForm(request.form, obj=publication)
         if form.validate():
             form.populate_obj(publication)
             publication.save()
             flash('Your entry has been saved')
     else:
-        form = SimpleDinosaurForm(obj=publication)
+        form = PublicationForm(obj=publication)
 
     return render_template('dinosaurs/form.html', form=form, publication=publication)
