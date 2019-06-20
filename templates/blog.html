@@ -2,19 +2,22 @@
 {% block main %}
 <h3>Posts</h3>
 <a href="{{ url_for('new_post') }}">New post</a>
-{% for publication in publications %}
+{% for post in posts %}
+ {{post}}
+{% endfor %}
+<!--{% for publication in posts %}
 <article>
     <div class="card">
     <a href="{{ url_for('edit_post', post_id=publication.id) }}">Edit this post</a>
         <dl>
-            <dt>{{ publication.titre }}</dt>
+            <dt>{{ publication.title }}</dt>
             <dt>
-                <small>by {{ publication.author.name }} on {{ publication.creation_date }}</small>
+                <small>by {{ User.get(publication.author) }} on {{ publication.creation_date }}</small>
             </dt>
             <dt>{{ publication.body }}</dt>
         </dl>
     </div>
 </article>
 <hr>
-{% endfor %}
+{% endfor %}-->
 {% endblock %}

@@ -40,7 +40,10 @@ def dropdb():
 @login_required
 def blog():
     publications = Publication.select()
-    return render_template('blog.html', publications=publications)
+    posts = list()
+    for publication in publications:
+        posts.append([publication,User.get(publication.author)])
+    return render_template('blog.html', publications=posts)
 
 @app.route('/new', methods=['GET','POST'])
 @login_required
