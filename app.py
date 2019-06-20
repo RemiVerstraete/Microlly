@@ -42,7 +42,7 @@ def blog():
     publications = Publication.select()
     posts = list()
     for publication in publications:
-        posts.append([publication,User.get(publication.author)])
+        posts.append({'publication': publication, 'author': User.get(publication.author)})
     return render_template('blog.html', publications=posts)
 
 @app.route('/new', methods=['GET','POST'])
