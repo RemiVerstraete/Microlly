@@ -37,13 +37,9 @@ def dropdb():
     click.echo('Dropped tables from database')
 
 @app.route('/')
-@login_required
 def blog():
     publications = Publication.select()
-    posts = list()
-    for publication in publications:
-        posts.append({'publication': publication, 'author': User.get(publication.author)})
-    return render_template('blog.html', publications=posts)
+    return render_template('blog.html', publications=publications)
 
 @app.route('/new', methods=['GET','POST'])
 @login_required
@@ -76,3 +72,12 @@ def edit_post(post_id):
         form = PublicationForm(obj=publication)
 
     return render_template('edit_publication.html', form=form, publication=publication)
+
+@app.route('/user_publication/<int:user_id>')
+def user_publication(user_id):
+    try:
+        user = User.get(user_id)
+    except User.DoesNotExist:
+        abort(404)
+
+    return render_template('user_publication.html', user=user)

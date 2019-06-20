@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 {% block main %}
-<h3>Posts</h3>
-<a href="{{ url_for('new_post') }}">New post</a>
-{% for publication in publications %}
+<h3>Posts by {{ user.username }}</h3>
+{% for publication in user.publications %}
 <article>
     <div class="card">
     <a href="{{ url_for('edit_post', post_id=publication.id) }}">Edit this post</a>
         <dl>
             <dt>{{ publication.title }}</dt>
             <dt>
-                <small>by <a href=" {{url_for('user_publication', user_id=publication.author.id)}}">{{ publication.author.username }}</a> on {{ publication.creation_date.strftime('%Y-%m-%d') }}</small>
+                <small>by <a>{{ publication.author.username }}</a> on {{ publication.creation_date.strftime('%Y-%m-%d') }}</small>
             </dt>
             <dt>{{ publication.body }}</dt>
         </dl>
