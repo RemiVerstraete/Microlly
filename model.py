@@ -15,6 +15,7 @@ class User(BaseModel, UserMixin):
     last_name = CharField()
     email = TextField(unique=True, index=True)
     password = TextField()
+    active = BooleanField(default=True)
 
 class Publication(BaseModel):
     title = CharField(index=True)

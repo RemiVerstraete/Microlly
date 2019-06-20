@@ -15,6 +15,8 @@ app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_REGISTER_URL'] = '/register'
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
+app.config['SECURITY_CONFIRMABLE'] = False
+app.config['SECURITY_PASSWORD_HASH'] = 'sha512_crypt'
 
 app.config['SECURITY_PASSWORD_SALT'] = app.config['SECRET_KEY']
 
@@ -39,7 +41,7 @@ def dropdb():
 def blog():
     publications = Publication.select()
     return render_template('blog.html', publications=publications)
-
+'''
 @app.route('/<int: post_id>', methods=['GET','POST'])
 @login_required
 def edit_post(post_id):
@@ -58,3 +60,4 @@ def edit_post(post_id):
         form = SimpleDinosaurForm(obj=publication)
 
     return render_template('dinosaurs/form.html', form=form, publication=publication)
+'''
