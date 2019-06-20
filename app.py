@@ -1,7 +1,7 @@
 import os, click
 from flask import Flask, render_template, url_for, request, flash, redirect, abort
 from peewee import *
-from flask_security import Security, PeeweeUserDatastore, login_required
+from flask_security import Security, PeeweeUserDatastore, login_required, current_user
 from model import User, Publication, create_tables, drop_tables, database
 from form import ExtendedRegisterForm, SimplePublicationForm, PublicationForm
 from flask_mail import Mail
@@ -18,7 +18,7 @@ app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 app.config['SECURITY_CONFIRMABLE'] = False
 app.config['SECURITY_PASSWORD_HASH'] = 'sha512_crypt'
 
-app.config['SECURITY_PASSWORD_SALT'] = app.config['SECRET_KEY']
+app.config['SECURITY_PASSWORD_SALT'] = 'Gloire au dieu Mathieu'
 
 user_datastore = PeeweeUserDatastore(database, User, '', '')
 
@@ -43,11 +43,13 @@ def blog():
     return render_template('blog.html', publications=publications)
 
 @app.route('/new', methods=['GET','POST'])
+@login_required
 def new_post():
     publication = Publication()
     form = PublicationForm()
     if form.validate_on_submit():
         form.populate_obj(publication)
+        publication.author = current_user.id
         publication.save()
         flash('Hooray ! Publication send !')
         return redirect(url_for('blog'))
