@@ -59,4 +59,4 @@ def edit_post(post_id):
     else:
         form = PublicationForm(obj=publication)
 
-    return render_template('dinosaurs/form.html', form=form, publication=publication)
+    return render_template('edit_publication.html', form=form, publication=publication)
