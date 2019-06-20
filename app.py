@@ -42,7 +42,18 @@ def blog():
     publications = Publication.select()
     return render_template('blog.html', publications=publications)
 
-@app.route('/edit/<int: post_id>', methods=['GET','POST'])
+@app.route('/new', methods=['GET','POST'])
+def new_post():
+    publication = Publication()
+    form = PublicationForm()
+    if form.validate_on_submit():
+        form.populate_obj(publication)
+        publication.save()
+        flash('Hooray ! Publication send !')
+        return redirect(url_for('blog'))
+    return render_template('new_publication.html', form=form)
+
+@app.route('/edit/<int:post_id>', methods=['GET','POST'])
 @login_required
 def edit_post(post_id):
     try:
