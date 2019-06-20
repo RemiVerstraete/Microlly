@@ -14,6 +14,6 @@
         {{ field() }}
     {% endfor %}
     <button type="submit">Save</button>
-    <button type="submit">Delete this post</button>
+    <a href="{{url_for('delete_post', post_id=publication.id)}}"><button type="button">Delete this post</button></a>
 </form>
 {% endblock %}

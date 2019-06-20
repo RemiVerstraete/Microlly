@@ -2,6 +2,7 @@ import os, click
 from flask import Flask, render_template, url_for, request, flash, redirect, abort
 from peewee import *
 from flask_security import Security, PeeweeUserDatastore, login_required, current_user
+from playhouse.flask_utils import PaginatedQuery, object_list
 from model import User, Publication, create_tables, drop_tables, database
 from form import ExtendedRegisterForm, SimplePublicationForm, PublicationForm
 from flask_mail import Mail
@@ -36,10 +37,14 @@ def dropdb():
     drop_tables()
     click.echo('Dropped tables from database')
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def blog():
-    publications = Publication.select()
-    return render_template('blog.html', publications=publications)
+    page = request.args.get('page_var')
+
+    #pagination = PaginatedQuery(Publication.select(),3,page,True)
+    #publications = pagination.get_object_list()
+
+    return object_list('blog.html',Publication.select(),context_variable='publications',paginate_by=2)
 
 @app.route('/new', methods=['GET','POST'])
 @login_required
@@ -72,6 +77,11 @@ def edit_post(post_id):
         form = PublicationForm(obj=publication)
 
     return render_template('edit_publication.html', form=form, publication=publication)
+
+@app.route('/delete/<int:post_id>')
+def delete_post(post_id):
+    Publication.delete_by_id(post_id)
+    return redirect('/')
 
 @app.route('/user_publication/<int:user_id>')
 def user_publication(user_id):
