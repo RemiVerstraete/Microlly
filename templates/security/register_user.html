@@ -1,21 +1,40 @@
 {% extends 'base.html' %}
 {% block main %}
-<form method="POST">
-    {% for field in register_user_form %}
-        {% if field != register_user_form.submit %}
-            <p>
-            {% if field.widget.input_type != 'hidden' %}
-                {{ field.label() }}
-                {% if field.errors %}
-                    {% for error in field.errors %}
-                        <div class="alert alert-error">{{ error }}</div>
+<div class="row">
+    <div class="offset-3 col-6">
+        <div class="card mt-4">
+            <div class="card-title">
+                <h3 class="m-3">Register</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% for field in register_user_form %}
+                    {% if field != register_user_form.submit %}
+                    {% if field.widget.input_type != 'hidden' %}
+                    <div class="control-group">
+                        <label class="control-label" for="{{ field.widget.name }}">{{ field.label() }}</label>
+                        <div class="controls">
+                            {{ field(class='form-control') }}
+                            <p class="help-block">
+                                {% if field.errors %}
+                                {% for error in field.errors %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                                {% endfor %}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% else %}
+                    {{ field() }}
+                    {% endif %}
+                    {% endif %}
                     {% endfor %}
-                {% endif %}
-            {% endif %}
-            {{ field() }}
-            </p>
-        {% endif %}
-    {% endfor %}
-    {{ register_user_form.submit }}
-</form>
+                    <div class="text-center">
+                        {{ register_user_form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock main %}

@@ -1,19 +1,41 @@
 {% extends 'base.html' %}
 {% block main %}
-<h3>Posts by {{ user.username }}</h3>
-{% for publication in user.publications %}
-<article>
-    <div class="card">
-    <a href="{{ url_for('edit_post', post_id=publication.id) }}">Edit this post</a>
-        <dl>
-            <dt>{{ publication.title }}</dt>
-            <dt>
-                <small>by <a>{{ publication.author.username }}</a> on {{ publication.creation_date.strftime('%Y-%m-%d') }}</small>
-            </dt>
-            <dt>{{ publication.body }}</dt>
-        </dl>
+<div class="row shadow-sm">
+    <h1 class="m-4">Posts from {{ user.username }}</h1>
+</div>
+
+<div class="row">
+    {% for publication in publications %}
+    <div class="col-6 p-3">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ publication.title }}
+                </h5>
+                <p> <small> by <a
+                            href=" {{url_for('user_publication', user_id=publication.author.id)}}">{{ publication.author.username }}</a>
+                        on {{ publication.creation_date.strftime('%Y-%m-%d') }} </small>
+                </p>
+                <p>{{ publication.body }}</p>
+                {% if publication.author == current_user %}
+                <div class="text-center">
+                    <a class="btn btn-secondary" href="{{ url_for('edit_post', post_id=publication.id) }}">Edit this
+                        post</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
-</article>
-<hr>
-{% endfor %}
+    {% endfor %}
+</div>
+<div class="row justify-content-center">
+    <div class="btn-group" role="group" aria-label="Pagination">
+        {% if page > 1 %}
+        <a class="btn btn-info previous" href="./?page={{ page - 1 }}">Previous</a>
+        {% endif %}
+        {% if pagination.get_page_count() > page %}
+        <a class="btn btn-info next" href="./?page={{ page + 1 }}">Next</a>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

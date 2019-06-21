@@ -39,12 +39,7 @@ def dropdb():
 
 @app.route('/', methods=['GET'])
 def blog():
-    page = request.args.get('page_var')
-
-    #pagination = PaginatedQuery(Publication.select(),3,page,True)
-    #publications = pagination.get_object_list()
-
-    return object_list('blog.html',Publication.select(),context_variable='publications',paginate_by=2)
+    return object_list('blog.html',Publication.select(),context_variable='publications',paginate_by=10)
 
 @app.route('/new', methods=['GET','POST'])
 @login_required
@@ -83,11 +78,11 @@ def delete_post(post_id):
     Publication.delete_by_id(post_id)
     return redirect('/')
 
-@app.route('/user_publication/<int:user_id>')
+@app.route('/user_publication/<int:user_id>/', methods=['GET'])
 def user_publication(user_id):
     try:
         user = User.get(user_id)
     except User.DoesNotExist:
         abort(404)
-
-    return render_template('user_publication.html', user=user)
+    return object_list('user_publication.html',user.publications,context_variable='publications',paginate_by=4,page_var='page',check_bounds=True,**{'user':user})
+    #return render_template('user_publication.html', user=user)
