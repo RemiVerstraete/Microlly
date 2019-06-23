@@ -37,9 +37,17 @@ def dropdb():
     drop_tables()
     click.echo('Dropped tables from database')
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error/404.html', error=e), 404
+
+@app.errorhandler(403)
+def unauthorized(e):
+    return render_template('error/403.html', error=e), 403
+
 @app.route('/', methods=['GET'])
 def blog():
-    return object_list('blog.html',Publication.select(),context_variable='publications',paginate_by=10)
+    return object_list('posts/blog.html',Publication.select(),context_variable='publications',paginate_by=10)
 
 @app.route('/new', methods=['GET','POST'])
 @login_required
@@ -52,7 +60,7 @@ def new_post():
         publication.save()
         flash('Hooray ! Publication send !')
         return redirect(url_for('blog'))
-    return render_template('new_publication.html', form=form)
+    return render_template('posts/new_publication.html', form=form)
 
 @app.route('/edit/<int:post_id>', methods=['GET','POST'])
 @login_required
@@ -62,20 +70,24 @@ def edit_post(post_id):
     except Publication.DoesNotExist:
         abort(404)
 
+    if (publication.author != current_user):
+        abort(403)
+    
     if request.method == 'POST':
         form = PublicationForm(request.form, obj=publication)
         if form.validate():
             form.populate_obj(publication)
             publication.save()
-            flash('Your entry has been saved')
+            flash('Your publication has been saved')
     else:
         form = PublicationForm(obj=publication)
 
-    return render_template('edit_publication.html', form=form, publication=publication)
+    return render_template('posts/edit_publication.html', form=form, publication=publication)
 
 @app.route('/delete/<int:post_id>')
 def delete_post(post_id):
     Publication.delete_by_id(post_id)
+    flash('Your publication has been deleted !')
     return redirect('/')
 
 @app.route('/user_publication/<int:user_id>/', methods=['GET'])
@@ -84,5 +96,4 @@ def user_publication(user_id):
         user = User.get(user_id)
     except User.DoesNotExist:
         abort(404)
-    return object_list('user_publication.html',user.publications,context_variable='publications',paginate_by=4,page_var='page',check_bounds=True,**{'user':user})
-    #return render_template('user_publication.html', user=user)
+    return object_list('posts/user_publication.html',user.publications,context_variable='publications',paginate_by=4,page_var='page',check_bounds=True,**{'user':user})
